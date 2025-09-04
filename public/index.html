@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Læringsassistent</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; background: #f9fafb; color: #111; }
+    h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+    button { background: #007aff; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; }
+    button:hover { background: #005bb5; }
+    textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ddd; margin-bottom: 1rem; }
+    .box { background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+  </style>
+</head>
+<body>
+  <h1>Læringsassistent</h1>
+
+  <div class="box">
+    <h2>Nyt forslag</h2>
+    <button onclick="lavForslag()">Lav forslag</button>
+    <p id="forslag"></p>
+  </div>
+
+  <div class="box">
+    <h2>Opsummering af læreplan</h2>
+    <button onclick="lavOpsummering()">Lav opsummering</button>
+    <p id="opsummering"></p>
+  </div>
+
+  <script>
+    async function lavForslag() {
+      const res = await fetch("https://fjwpfesqfwtozaciphnc.supabase.co/functions/v1/forslag", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqd3BmZXNxZnd0b3phY2lwaG5jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5Nzg5NDksImV4cCI6MjA3MjU1NDk0OX0.4JaHGc5ISuk7IywOeEbuaHGMBFMLJo3uK2MLFF8S6BE"
+        },
+        body: JSON.stringify({ text: "Eksempel tekst", profile: "1. Praktik" })
+      });
+      const data = await res.json();
+      document.getElementById("forslag").innerText = data.suggestion || JSON.stringify(data);
+    }
+
+    async function lavOpsummering() {
+      const res = await fetch("https://fjwpfesqfwtozaciphnc.supabase.co/functions/v1/opsummering", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqd3BmZXNxZnd0b3phY2lwaG5jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5Nzg5NDksImV4cCI6MjA3MjU1NDk0OX0.4JaHGc5ISuk7IywOeEbuaHGMBFMLJo3uK2MLFF8S6BE"
+        },
+        body: JSON.stringify({ text: "Dette er en test af opsummering" })
+      });
+      const data = await res.json();
+      document.getElementById("opsummering").innerText = data.summary || JSON.stringify(data);
+    }
+  </script>
+</body>
+</html>
